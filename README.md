@@ -1,0 +1,2 @@
+# sentinel
+monitor anything anytime
