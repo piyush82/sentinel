@@ -1,4 +1,5 @@
-package ch.icclab.sentinel;/*
+package ch.icclab.sentinel;
+/*
  * Copyright (c) 2017. Cyclops-Labs Gmbh
  *  All Rights Reserved.
  *
@@ -33,8 +34,12 @@ import org.I0Itec.zkclient.ZkConnection;
 import kafka.admin.AdminUtils;
 import kafka.utils.ZKStringSerializer$;
 import kafka.utils.ZkUtils;
+import org.apache.log4j.Logger;
 
-public class KafkaClient {
+public class KafkaClient
+{
+    final static Logger logger = Logger.getLogger(KafkaClient.class);
+
     public static String[] listTopics()
     {
         Map<String, List<PartitionInfo>> topics;

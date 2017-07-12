@@ -1,4 +1,4 @@
-package ch.icclab.sentinel;
+package ch.icclab.sentinel.dao;
 
 /*
  * Copyright (c) 2017. ZHAW - ICCLab
@@ -22,16 +22,16 @@ package ch.icclab.sentinel;
  *     URL: piyush-harsh.info
  */
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+public class SeriesInput
+{
+    public String name;
+    public String spaceName;
+    public String msgSignature;
 
-@Configuration
-public class WebConfig {
-
-    public void addResourceHandlers(ResourceHandlerRegistry registry)
+    public boolean isValidData()
     {
-        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
+        if(name == null || spaceName == null || msgSignature == null || name.trim().length() == 0 ||
+                spaceName.trim().length() == 0 || msgSignature.trim().length() == 0) return false;
+        return true;
     }
 }

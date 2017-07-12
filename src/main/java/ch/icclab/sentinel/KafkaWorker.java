@@ -23,10 +23,13 @@ package ch.icclab.sentinel;/*
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.Properties;
 
 public class KafkaWorker implements Runnable {
+    final static Logger logger = Logger.getLogger(KafkaWorker.class);
     private ArrayList<String> topics;
     private boolean isInterrupted;
 
@@ -77,10 +80,10 @@ public class KafkaWorker implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().getName() + " starting with " + topics.size() + " topics.");
+        logger.info(Thread.currentThread().getName() + " starting with " + topics.size() + " topics.");
         for(String topic:topics)
         {
-            System.out.println(Thread.currentThread().getName() + " subscribing to: " + topic);
+            logger.info(Thread.currentThread().getName() + " subscribing to: " + topic);
         }
 
         Properties props = new Properties();
@@ -107,6 +110,6 @@ public class KafkaWorker implements Runnable {
             }
         }
 
-        System.out.println(Thread.currentThread().getName() + " quitting now. Was subscribed with " + (topics.size() - 1) + " topics.");
+        logger.info(Thread.currentThread().getName() + " quitting now. Was subscribed with " + (topics.size() - 1) + " topics.");
     }
 }

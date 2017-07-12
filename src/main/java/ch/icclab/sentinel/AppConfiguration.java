@@ -24,20 +24,20 @@ package ch.icclab.sentinel;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
-import java.sql.*;
-import static org.jooq.impl.DSL.*;
 
 @Component
 public class AppConfiguration {
     final static Logger logger = Logger.getLogger(AppConfiguration.class);
 
-    @Value("${stream.db.adminuser}")
+    @Value("${stream.adminuser}")
     String streamDbAdminUser;
 
-    @Value("${stream.db.adminpass}")
+    @Value("${stream.adminpass}")
     String streamDbAdminPass;
+
+    @Value("${stream.accessurl}")
+    String streamaccessurl;
 
     @Value("${kafka.endpoint}")
     String kafka;
@@ -45,10 +45,10 @@ public class AppConfiguration {
     @Value("${zookeeper.endpoint}")
     String zookeeper;
 
-    @Value("${stream.db.type}")
+    @Value("${stream.dbtype}")
     String streamDbType;
 
-    @Value("${stream.db.endpoint}")
+    @Value("${stream.dbendpoint}")
     String streamDbUrl;
 
     @Value("${sentinel.db.type}")
@@ -60,6 +60,21 @@ public class AppConfiguration {
     @Value("${topic.check.interval}")
     long topicwaitperiod;
 
+    @Value("${series.format.cache.size}")
+    int sFormatCSize;
+
+    @Value("${admin.token}")
+    String adminPass;
+
+    @Value("${published.api.version}")
+    String apiV;
+
+    @Value("${kafka.key.serializer}")
+    String kafkakeyserializer;
+
+    @Value("${kafka.value.serializer}")
+    String kafkavalueserializer;
+
 
     private static String streamDBUser;
     private static String streamDBPass;
@@ -70,6 +85,12 @@ public class AppConfiguration {
     private static String sentinelDBType;
     private static String sentinelDBURL;
     private static long topicCheckWaitingPeriod;
+    private static String adminToken;
+    private static int seriesFormatCacheSize;
+    private static String publishedApiVersion;
+    private static String kafkaKeySerializer;
+    private static String kafkaValueSerializer;
+    private static String streamAccessUrl;
 
 
     public static String getStreamDBUser()
@@ -90,6 +111,11 @@ public class AppConfiguration {
     public static String getStreamDBURL()
     {
         return streamDBURL;
+    }
+
+    public static String getStreamAccessUrl()
+    {
+        return streamAccessUrl;
     }
 
     public static String getSentinelDBType()
@@ -117,17 +143,48 @@ public class AppConfiguration {
         return topicCheckWaitingPeriod;
     }
 
+    public static String getAdminToken()
+    {
+        return adminToken;
+    }
+
+    public static int getSeriesFormatCacheSize()
+    {
+        return seriesFormatCacheSize;
+    }
+
+    public static String getPublishedApiVersion()
+    {
+        return publishedApiVersion;
+    }
+
+    public static String getKafkaKeySerializer()
+    {
+        return kafkaKeySerializer;
+    }
+
+    public static String getKafkaValueSerializer()
+    {
+        return kafkaValueSerializer;
+    }
+
     @PostConstruct
     public void init() {
-        streamDBUser = streamDBUser;
-        streamDBPass = streamDBPass;
-        streamDBType = streamDBType;
-        streamDBURL = streamDBURL;
-        sentinelDBType = sentinelDBType;
-        sentinelDBURL = sentinelDBURL;
+        streamDBUser = streamDbAdminUser;
+        streamDBPass = streamDbAdminPass;
+        streamDBType = streamDbType;
+        streamDBURL = streamDbUrl;
+        sentinelDBType = sentinelDbType;
+        sentinelDBURL = sentinelDbUrl;
         KafkaURL = kafka;
         ZookeeperURL = zookeeper;
         topicCheckWaitingPeriod = topicwaitperiod;
+        adminToken = adminPass;
+        seriesFormatCacheSize = sFormatCSize;
+        publishedApiVersion = apiV;
+        kafkaKeySerializer = kafkakeyserializer;
+        kafkaValueSerializer = kafkavalueserializer;
+        streamAccessUrl = streamaccessurl;
     }
 
 }

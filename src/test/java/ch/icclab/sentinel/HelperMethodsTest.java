@@ -1,5 +1,4 @@
 package ch.icclab.sentinel;
-
 /*
  * Copyright (c) 2017. ZHAW - ICCLab
  *  All Rights Reserved.
@@ -17,21 +16,30 @@ package ch.icclab.sentinel;
  *     under the License.
  */
 
-/*
- *     Author: Piyush Harsh,
- *     URL: piyush-harsh.info
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+/**
+ * Created by piyush on 7/11/17.
  */
-
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-@Configuration
-public class WebConfig {
-
-    public void addResourceHandlers(ResourceHandlerRegistry registry)
+public class HelperMethodsTest
+{
+    @Test
+    public void testSHA256generation()
     {
-        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
+        assertEquals("generates hash for 'test'", "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+                HelperMethods.generateSHA256Hash("test"));
+    }
+
+    @Test
+    public void testJsonValidator()
+    {
+        assertTrue(HelperMethods.isJSONValid("{\"username\":\"piyush\"}"));
+    }
+
+    @Test
+    public void testRandomStringGeneration()
+    {
+        assertNotNull(HelperMethods.randomString(10));
     }
 }

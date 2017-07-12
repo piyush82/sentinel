@@ -1,5 +1,6 @@
-package ch.icclab.sentinel;/*
- * Copyright (c) 2017. Cyclops-Labs Gmbh
+package ch.icclab.sentinel;
+/*
+ * Copyright (c) 2017. ZHAW - ICCLab
  *  All Rights Reserved.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -15,12 +16,15 @@ package ch.icclab.sentinel;/*
  *     under the License.
  */
 
+import org.apache.log4j.Logger;
+
 /*
  *     Author: Piyush Harsh,
  *     URL: piyush-harsh.info
  */
-public class PersistenceWorker implements Runnable {
-
+public class PersistenceWorker implements Runnable
+{
+    final static Logger logger = Logger.getLogger(PersistenceWorker.class);
     private String topic;
     private String key;
     private Long msgOffset;
@@ -44,8 +48,10 @@ public class PersistenceWorker implements Runnable {
     {
         try
         {
-            //do something here based on topic and key values!
-            System.out.println(Thread.currentThread().getName() + " is starting to persist incoming msg: [Topic=" + topic + ", Offset=" + msgOffset + ", Key=" + key + ", Value=" + value + "]");
+            //get series format from DB entry for the
+            logger.info(Thread.currentThread().getName() + " got: [Topic=" + topic + ", Offset=" + msgOffset + ", Key=" + key + ", Value=" + value + "]");
+            if(AppConfiguration.getStreamDBType().equalsIgnoreCase("influxdb"))
+                InfluxDBClient.addPoint(topic, key, value);
             //Thread.sleep(5000);
         }
         catch (Exception e)

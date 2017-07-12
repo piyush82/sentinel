@@ -28,23 +28,37 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.log4j.Logger;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@ComponentScan
 @SpringBootApplication
+@EnableSwagger2
+@ComponentScan(basePackageClasses = {
+        APIController.class
+})
 public class Application {
-
+    final static Logger logger = Logger.getLogger(Application.class);
     public static KafkaThreadManager threadpool = new KafkaThreadManager();
+    public static SeriesStructureCache msgFormatCache;
     public static ExecutorService PersistenceWorkerPool = Executors.newFixedThreadPool((int)(Math.max(Math.ceil((Runtime.getRuntime().availableProcessors() * 0.3)) - 1.0, 1.0)));
 
     public static void main (String[] args)
     {
-        TopicsManager topicSyncProcess = new TopicsManager();
         SpringApplication.run(Application.class, args);
-        //boolean status = KafkaClient.createTopic("testing5");
+        //boolean status = KafkaClient.createTopic("zane-sensor-data");
         //System.out.println(status);
         //boolean status = KafkaClient.deleteTopic("testing5");
         //System.out.println(status);
-        topicSyncProcess.start(); //this consumes 1 processor
+        if(!Initialize.isDbValid()) {
+            Initialize.prepareDbInitScripts();
+            Initialize.initializeDb();
+        }
+        msgFormatCache = new SeriesStructureCache(AppConfiguration.getSeriesFormatCacheSize());
+        if(AppConfiguration.getStreamDBType().equalsIgnoreCase("influxdb")) InfluxDBClient.init();
+        //SqlDriver.isDuplicateUser("piyush@zhaw.ch");
+        TopicsManager topicSyncProcess = new TopicsManager();
+        topicSyncProcess.start(); //this consumes 1 processor core
     }
+
 }

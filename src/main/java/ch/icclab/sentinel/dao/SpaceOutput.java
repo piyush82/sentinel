@@ -1,4 +1,4 @@
-package ch.icclab.sentinel;
+package ch.icclab.sentinel.dao;
 
 /*
  * Copyright (c) 2017. ZHAW - ICCLab
@@ -22,16 +22,14 @@ package ch.icclab.sentinel;
  *     URL: piyush-harsh.info
  */
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-@Configuration
-public class WebConfig {
-
-    public void addResourceHandlers(ResourceHandlerRegistry registry)
-    {
-        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
-    }
+public class SpaceOutput
+{
+    public int id;
+    public String accessUrl;
+    public String topicName;
+    public String name;
+    public SeriesOutput[] seriesList; //replace this with actual class name
+    public String dataDashboardUrl;
+    public String dataDashboardUser;
+    public String dataDashboardPassword;
 }

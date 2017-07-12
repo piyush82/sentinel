@@ -1,4 +1,4 @@
-package ch.icclab.sentinel;
+package ch.icclab.sentinel.cache;
 
 /*
  * Copyright (c) 2017. ZHAW - ICCLab
@@ -22,16 +22,11 @@ package ch.icclab.sentinel;
  *     URL: piyush-harsh.info
  */
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-@Configuration
-public class WebConfig {
+import java.util.LinkedList;
 
-    public void addResourceHandlers(ResourceHandlerRegistry registry)
-    {
-        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
-    }
+public class HashElement
+{
+    public LinkedList<ListElement> elements;
+    public boolean isDirty;
 }

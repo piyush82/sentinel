@@ -1,7 +1,6 @@
-package ch.icclab.sentinel;
-
+package ch.icclab.sentinel.dao;
 /*
- * Copyright (c) 2017. ZHAW - ICCLab
+ * Copyright (c) 2017. Cyclops-Labs Gmbh
  *  All Rights Reserved.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -22,16 +21,9 @@ package ch.icclab.sentinel;
  *     URL: piyush-harsh.info
  */
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-@Configuration
-public class WebConfig {
-
-    public void addResourceHandlers(ResourceHandlerRegistry registry)
-    {
-        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
-    }
+public class SentinelDockerStatsAgentValue
+{
+    public String id;
+    public String name;
+    public SentinelDockerStatsAgentMetric[] metrics;
 }

@@ -15,23 +15,69 @@ package ch.icclab.sentinel;/*
  *     under the License.
  */
 
+import org.apache.log4j.Logger;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+
 /*
  *     Author: Piyush Harsh,
  *     URL: piyush-harsh.info
  */
 public class TopicsManager extends Thread {
-
+    final static Logger logger = Logger.getLogger(TopicsManager.class);
     public void run()
     {
-        System.out.println("Starting topics manager thread.");
+        logger.info("Starting topics manager thread.");
         while(true)
         {
             String[] topics = KafkaClient.listTopics();
+            //for( String topic: topics) System.out.println(topic + " ");
+            LinkedList<String> registeredTopics = SqlDriver.getGlobalTopicsList();
+            //for( String topic: registeredTopics) System.out.println(topic + " ");
+
+            //checking if all topics found are registered with sentinel - if not they must be deleted
             //now assign the topics to worker threads
             for(String topic:topics)
-                if(!topic.startsWith("__"))
-                    Application.threadpool.addTopic(topic);
-            
+            {
+                if (!topic.startsWith("__")) {
+                    if (registeredTopics.contains(topic))
+                        Application.threadpool.addTopic(topic);
+                    else {
+                        if (!topic.equalsIgnoreCase("zane-sensor-data"))
+                        {
+                            boolean status = KafkaClient.deleteTopic(topic);
+                            Application.threadpool.removeTopic(topic);
+                            if (status)
+                                logger.info("Topic: " + topic + " has been deleted from kafka cluster");
+                            else
+                                logger.warn("Topic: " + topic + " could not be removed from kafka cluster");
+                        }
+                        else //just for zane-sensor-data
+                        {
+                            Application.threadpool.addTopic(topic);
+                        }
+                    }
+                }
+            }
+
+            for(String topic:registeredTopics)
+            {
+                if(!Arrays.asList(topics).contains(topic))
+                {
+                    boolean status = KafkaClient.createTopic(topic);
+                    if(status)
+                    {
+                        logger.info("Topic: " + topic + " has been registered with kafka cluster");
+                        Application.threadpool.addTopic(topic);
+                    }
+                    else
+                    {
+                        logger.warn("Topic: " + topic + " could not be registered with kafka cluster");
+                    }
+                }
+            }
+
             try
             {
                 Thread.sleep(AppConfiguration.getTopicCheckWaitingPeriod());

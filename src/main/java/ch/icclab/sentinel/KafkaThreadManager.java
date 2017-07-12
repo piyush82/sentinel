@@ -1,5 +1,6 @@
-package ch.icclab.sentinel;/*
- * Copyright (c) 2017. Cyclops-Labs Gmbh
+package ch.icclab.sentinel;
+/*
+ * Copyright (c) 2017. ZHAW - ICCLab
  *  All Rights Reserved.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -31,7 +32,7 @@ public class KafkaThreadManager {
 
     public KafkaThreadManager()
     {
-        System.out.println("Using process count - " + cores);
+        logger.info("Using process count - " + cores);
         workerPool = new WorkerMetaInformation[cores];
     }
 
@@ -84,7 +85,11 @@ public class KafkaThreadManager {
         }
         if(!found)
         {
-            System.out.println("Previously unseen topic found: proceeding to add - " + topicstring);
+            logger.info("Previously unseen topic found: proceeding to add - " + topicstring);
+
+            if(AppConfiguration.getStreamDBType().equalsIgnoreCase("influxdb"))
+                InfluxDBClient.addDB(topicstring);
+
             if(workerPool[nextPointer] != null)
             {
                 workerPool[nextPointer].subscribedTopics.add(topicstring);
@@ -109,7 +114,7 @@ public class KafkaThreadManager {
                 workerPool[nextPointer].t = new Thread(workerPool[nextPointer].worker);
                 workerPool[nextPointer].t.start(); //this may cause kafka consumer to be delayed by up to 5 minutes
             } else {
-                System.out.println("No existing worker located, creating a new one.");
+                logger.info("No existing worker located, creating a new one.");
                 workerPool[nextPointer] = new WorkerMetaInformation();
                 workerPool[nextPointer].subscribedTopics.add(topicstring);
                 String[] tempTopics = new String[1];
