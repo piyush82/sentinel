@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
+import java.util.Map;
 
 @Component
 public class AppConfiguration {
@@ -170,21 +171,57 @@ public class AppConfiguration {
 
     @PostConstruct
     public void init() {
-        streamDBUser = streamDbAdminUser;
-        streamDBPass = streamDbAdminPass;
-        streamDBType = streamDbType;
-        streamDBURL = streamDbUrl;
-        sentinelDBType = sentinelDbType;
-        sentinelDBURL = sentinelDbUrl;
-        KafkaURL = kafka;
-        ZookeeperURL = zookeeper;
-        topicCheckWaitingPeriod = topicwaitperiod;
-        adminToken = adminPass;
+        Map<String, String> env = System.getenv();
+        if(env.containsKey("STREAM_ADMINUSER"))
+            streamDBUser = env.get("STREAM_ADMINUSER");
+        else
+            streamDBUser = streamDbAdminUser;
+        if(env.containsKey("STREAM_ADMINPASS"))
+            streamDBPass = env.get("STREAM_ADMINPASS");
+        else
+            streamDBPass = streamDbAdminPass;
+        if(env.containsKey("STREAM_ACCESSURL"))
+            streamAccessUrl = env.get("STREAM_ACCESSURL");
+        else
+            streamAccessUrl = streamaccessurl;
+        if(env.containsKey("KAFKA_ENDPOINT"))
+            KafkaURL = env.get("KAFKA_ENDPOINT");
+        else
+            KafkaURL = kafka;
+        if(env.containsKey("ZOOKEEPER_ENDPOINT"))
+            ZookeeperURL = env.get("ZOOKEEPER_ENDPOINT");
+        else
+            ZookeeperURL = zookeeper;
+        if(env.containsKey("STREAM_DBTYPE"))
+            streamDBType = env.get("STREAM_DBTYPE");
+        else
+            streamDBType = streamDbType;
+        if(env.containsKey("STREAM_DBENDPOINT"))
+            streamDBURL = env.get("STREAM_DBENDPOINT");
+        else
+            streamDBURL = streamDbUrl;
+        if(env.containsKey("SENTINEL_DB_TYPE"))
+            sentinelDBType = env.get("SENTINEL_DB_TYPE");
+        else
+            sentinelDBType = sentinelDbType;
+        if(env.containsKey("SENTINEL_DB_ENDPOINT"))
+            sentinelDBURL = env.get("SENTINEL_DB_ENDPOINT");
+        else
+            sentinelDBURL = sentinelDbUrl;
+        if(env.containsKey("TOPIC_CHECK_INTERVAL"))
+            topicCheckWaitingPeriod = Long.parseLong(env.get("TOPIC_CHECK_INTERVAL"));
+        else
+            topicCheckWaitingPeriod = topicwaitperiod;
+        if(env.containsKey("ADMIN_TOKEN"))
+            adminToken = env.get("ADMIN_TOKEN");
+        else
+            adminToken = adminPass;
+
         seriesFormatCacheSize = sFormatCSize;
         publishedApiVersion = apiV;
         kafkaKeySerializer = kafkakeyserializer;
         kafkaValueSerializer = kafkavalueserializer;
-        streamAccessUrl = streamaccessurl;
+
     }
 
 }
